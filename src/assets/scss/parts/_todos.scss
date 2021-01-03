@@ -75,6 +75,17 @@
     opacity: .98;
 }
 
+.bg-check {
+    background: linear-gradient(hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+        width: 15px;
+    }
+}
+
 .active-btn {
     color:  hsl(220, 98%, 61%) !important;
 }

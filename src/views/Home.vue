@@ -21,7 +21,9 @@
         <div :class="[todoForm, {'form-dark-bg': isDark}, {'white-bg': !isDark}]">
 
           <div class="todo border-bottom" v-for="(todo, idx) in filterTodos" :key="idx">
-            <div @click="markComplete(idx)" :class="[todoCircle, {'border-dark': isDark}, {'border-light': !isDark}]"></div>
+            <div @click="markComplete(idx)" :class="[todoCircle, {'border-dark': isDark}, {'border-light': !isDark}, {'bg-check': todo.completed}]">
+              <img v-if="todo.completed" src="@/assets/images/icon-check.svg" alt="#" />
+            </div>
             <div :class="[text, {'dark-text': isDark}, {'light-text': !isDark}, {'completed': todo.completed}]">
               <p>{{todo.text}}</p>
             </div>
@@ -55,13 +57,9 @@
 </template>
 
 <script>
-// import TodoList from '@/components/share-tools/TodoList';
 
 export default {
   name: 'Home',
-  components: {
-    // TodoList,
-  },
   props: {
     head: {
       type: String,
@@ -124,6 +122,7 @@ export default {
     this.$on("hook:beforeDestroy", () => {
       window.removeEventListener('resize', this.getWindowSize);
     });
+    this.getLSTodos();
   },
   methods: {
     getWindowSize() {
@@ -134,7 +133,9 @@ export default {
         text: todo,
         completed: false,
       });
+      localStorage.setItem('todos', JSON.stringify(this.todos));
       this.task = '';
+      this.getLSTodos();
     },
     setDarkMode() {
       this.isDark = true;
@@ -148,9 +149,28 @@ export default {
     },
     deleteTodo(idx) {
       this.todos.splice(idx, 1)
+      this.removeLSTodo(idx);
     },
     clearCompleted() {
       this.todos = this.todos.filter(todo => !todo.completed);
+      localStorage.setItem('todos', JSON.stringify(this.todos));
+    },
+    getLSTodos() {
+      if(localStorage.getItem('todos') === null) {
+        return
+      } else {
+        this.todos = JSON.parse(localStorage.getItem('todos'));
+      }
+    },
+    removeLSTodo(idx) {
+      if(localStorage.getItem('todos') === null) {
+        return
+      } else {
+        this.todos = JSON.parse(localStorage.getItem('todos'));
+        this.todos.splice(idx, 1);
+        localStorage.setItem('todos', JSON.stringify(this.todos));
+      }
+      // console.log(todo);
     }
   },
   computed: {
