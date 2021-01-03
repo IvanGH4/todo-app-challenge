@@ -15,34 +15,39 @@
         </form>
       </div>
     </div>  
-      <!-- <TodoList :dark="isDark" :myTodos="todos" /> -->
+      <!-- List of Todos -->
     <div class="todos-container">
       <div class="todos-wrapper">
         <div :class="[todoForm, {'form-dark-bg': isDark}, {'white-bg': !isDark}]">
 
-      <div class="todo border-bottom" v-for="(todo, idx) in filterTodos" :key="idx">
-        <div @click="markComplete(idx)" :class="[todoCircle, {'border-dark': isDark}, {'border-light': !isDark}]"></div>
-        <div :class="[text, {'dark-text': isDark}, {'light-text': !isDark}, {'completed': todo.completed}]">
-          <p>{{todo.text}}</p>
-        </div>
-        <div class="delete-todo" @click="deleteTodo(idx)">
-          <img src="@/assets/images/icon-cross.svg" alt="delete" />
-        </div>
+          <div class="todo border-bottom" v-for="(todo, idx) in filterTodos" :key="idx">
+            <div @click="markComplete(idx)" :class="[todoCircle, {'border-dark': isDark}, {'border-light': !isDark}]"></div>
+            <div :class="[text, {'dark-text': isDark}, {'light-text': !isDark}, {'completed': todo.completed}]">
+              <p>{{todo.text}}</p>
+            </div>
+            <div class="delete-todo" @click="deleteTodo(idx)">
+              <img src="@/assets/images/icon-cross.svg" alt="delete" />
+            </div>
+          </div>
+          <div class="options">
+            <div class="quantity">
+              <span>{{todos.length}} todos</span>
+            </div>
+            <div class="btn-box">
+              <button @click="filter = 'all'" :class="[btn, {'active-btn': filter == 'all'}]">All</button>
+              <button @click="filter = 'active'" :class="[btn, {'active-btn': filter == 'active'}]">Active</button>
+              <button @click="filter = 'completed'" :class="[btn, {'active-btn': filter == 'completed'}]">Completed</button>
+            </div>
+            <div>
+              <button @click="clearCompleted" class="btn">Clear Completed</button>
+            </div>
+          </div>
+
       </div>
-      <div class="options">
-        <div class="quantity">
-          <span>{{todos.length}} todos</span>
-        </div>
-        <div class="btn-box">
+      <div :class="[btns, {'form-dark-bg': isDark}, {'white-bg': !isDark}]">
           <button @click="filter = 'all'" :class="[btn, {'active-btn': filter == 'all'}]">All</button>
           <button @click="filter = 'active'" :class="[btn, {'active-btn': filter == 'active'}]">Active</button>
           <button @click="filter = 'completed'" :class="[btn, {'active-btn': filter == 'completed'}]">Completed</button>
-        </div>
-        <div>
-          <button @click="clearCompleted" class="btn">Clear Completed</button>
-        </div>
-      </div>
-
       </div>
       </div>
     </div> 
@@ -83,6 +88,10 @@ export default {
       type: String,
       default: 'btn'
     },
+    btns: {
+      type: String,
+      default: 'apart-btns'
+    },
     text: {
       type: String,
       default: 'todo-text'
@@ -112,6 +121,9 @@ export default {
   },
   mounted() {
     window.addEventListener('resize', this.getWindowSize);
+    this.$on("hook:beforeDestroy", () => {
+      window.removeEventListener('resize', this.getWindowSize);
+    });
   },
   methods: {
     getWindowSize() {

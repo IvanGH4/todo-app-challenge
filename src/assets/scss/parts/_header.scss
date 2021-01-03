@@ -54,3 +54,9 @@
 .circle:hover {
     background: linear-gradient(hsl(192, 100%, 67%) to hsl(280, 87%, 65%));
 }
+
+@media(max-width: 900px) {
+    .wrapper {
+        width: 80%;
+    }
+}
